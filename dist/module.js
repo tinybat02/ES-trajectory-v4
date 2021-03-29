@@ -61830,7 +61830,11 @@ function (_super) {
         this.map.removeLayer(this.totalRoute);
         this.map.addLayer(this.totalRoute);
       } else {
+        this.map.removeLayer(this.totalRoute);
+        this.map.removeLayer(this.partialRoute);
+        this.map.addLayer(this.partialRoute);
         var floorData = this.perDeviceFloor[this.state.current];
+        if (floorData.length < 2) return;
 
         if (floorData[this.state.iterRoute + 1] == this.props.options.other_floor) {
           this.randomTile = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Tile"]({
@@ -61849,10 +61853,6 @@ function (_super) {
           });
           this.map.addLayer(this.randomTile);
         }
-
-        this.map.removeLayer(this.totalRoute);
-        this.map.removeLayer(this.partialRoute);
-        this.map.addLayer(this.partialRoute);
       }
     }
   };

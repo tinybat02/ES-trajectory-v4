@@ -237,7 +237,12 @@ export class MainPanel extends PureComponent<Props> {
         this.map.removeLayer(this.totalRoute);
         this.map.addLayer(this.totalRoute);
       } else {
+        this.map.removeLayer(this.totalRoute);
+        this.map.removeLayer(this.partialRoute);
+        this.map.addLayer(this.partialRoute);
         const floorData = this.perDeviceFloor[this.state.current];
+        if (floorData.length < 2) return;
+
         if (floorData[this.state.iterRoute + 1] == this.props.options.other_floor) {
           this.randomTile = new TileLayer({
             source: new XYZ({
@@ -255,10 +260,6 @@ export class MainPanel extends PureComponent<Props> {
           });
           this.map.addLayer(this.randomTile);
         }
-
-        this.map.removeLayer(this.totalRoute);
-        this.map.removeLayer(this.partialRoute);
-        this.map.addLayer(this.partialRoute);
       }
     }
   }
