@@ -149,9 +149,8 @@ export class MainPanel extends PureComponent<Props> {
     }
 
     if (prevProps.options.tile_url !== this.props.options.tile_url) {
-      if (this.randomTile) {
-        this.map.removeLayer(this.randomTile);
-      }
+      if (this.randomTile) this.map.removeLayer(this.randomTile);
+
       if (this.props.options.tile_url !== '') {
         this.randomTile = new TileLayer({
           source: new XYZ({
@@ -238,6 +237,25 @@ export class MainPanel extends PureComponent<Props> {
         this.map.removeLayer(this.totalRoute);
         this.map.addLayer(this.totalRoute);
       } else {
+        const floorData = this.perDeviceFloor[this.state.current];
+        if (floorData[this.state.iterRoute + 1] == this.props.options.other_floor) {
+          this.randomTile = new TileLayer({
+            source: new XYZ({
+              url: this.props.options.tile_other,
+            }),
+            zIndex: 1,
+          });
+          this.map.addLayer(this.randomTile);
+        } else {
+          this.randomTile = new TileLayer({
+            source: new XYZ({
+              url: this.props.options.tile_url,
+            }),
+            zIndex: 1,
+          });
+          this.map.addLayer(this.randomTile);
+        }
+
         this.map.removeLayer(this.totalRoute);
         this.map.removeLayer(this.partialRoute);
         this.map.addLayer(this.partialRoute);
@@ -263,6 +281,30 @@ export class MainPanel extends PureComponent<Props> {
     if (type === 'previous' && iterRoute > 0) {
       this.map.removeLayer(this.partialRoute);
       this.setState({ iterRoute: iterRoute - 1 }, () => {
+        if (
+          this.state.iterRoute < floorData.length - 2 &&
+          floorData[this.state.iterRoute + 1] != floorData[this.state.iterRoute + 2]
+        ) {
+          if (this.props.options.tile_url == '' || this.props.options.tile_other == '') return;
+          this.map.removeLayer(this.randomTile);
+          if (floorData[this.state.iterRoute + 2] == this.props.options.other_floor) {
+            this.randomTile = new TileLayer({
+              source: new XYZ({
+                url: this.props.options.tile_url,
+              }),
+              zIndex: 1,
+            });
+            this.map.addLayer(this.randomTile);
+          } else {
+            this.randomTile = new TileLayer({
+              source: new XYZ({
+                url: this.props.options.tile_other,
+              }),
+              zIndex: 1,
+            });
+            this.map.addLayer(this.randomTile);
+          }
+        }
         const lineFeature = createLineWithLabel(
           routeData,
           timeData,
@@ -298,6 +340,28 @@ export class MainPanel extends PureComponent<Props> {
     if (type === 'next' && iterRoute < routeData.length - 2) {
       this.partialRoute && this.map.removeLayer(this.partialRoute);
       this.setState({ iterRoute: iterRoute + 1 }, () => {
+        if (floorData[this.state.iterRoute] != floorData[this.state.iterRoute + 1]) {
+          if (this.props.options.tile_url == '' || this.props.options.tile_other == '') return;
+          this.map.removeLayer(this.randomTile);
+
+          if (floorData[this.state.iterRoute + 1] == this.props.options.other_floor) {
+            this.randomTile = new TileLayer({
+              source: new XYZ({
+                url: this.props.options.tile_other,
+              }),
+              zIndex: 1,
+            });
+            this.map.addLayer(this.randomTile);
+          } else {
+            this.randomTile = new TileLayer({
+              source: new XYZ({
+                url: this.props.options.tile_url,
+              }),
+              zIndex: 1,
+            });
+            this.map.addLayer(this.randomTile);
+          }
+        }
         const lineFeature = createLineWithLabel(
           routeData,
           timeData,
@@ -337,7 +401,6 @@ export class MainPanel extends PureComponent<Props> {
 
   onSlider = (value: number) => {
     this.map.removeLayer(this.partialRoute);
-    // this.setState({ iterRoute: value });
 
     const routeData = this.perDeviceRoute[this.state.current].map(coordinate => fromLonLat(coordinate));
     const timeData = this.perDeviceTime[this.state.current];

@@ -9,10 +9,10 @@ export const PanelEditor: React.FC<PanelEditorProps<MapOptions>> = ({ options, o
   const [inputs, setInputs] = useState(options);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     setInputs(prevState => ({
       ...prevState,
-      [name]: value,
+      [name]: type == 'number' ? Number(value) || 0 : value,
     }));
   };
 
@@ -44,12 +44,21 @@ export const PanelEditor: React.FC<PanelEditorProps<MapOptions>> = ({ options, o
             onChange={handleChange}
           />
           <FormField
-            label="Additional Tile"
+            label="1st Tile"
             labelWidth={10}
             inputWidth={80}
             type="text"
             name="tile_url"
             value={inputs.tile_url}
+            onChange={handleChange}
+          />
+          <FormField
+            label="2nd Tile"
+            labelWidth={10}
+            inputWidth={80}
+            type="text"
+            name="tile_other"
+            value={inputs.tile_other}
             onChange={handleChange}
           />
           <FormField
@@ -59,6 +68,15 @@ export const PanelEditor: React.FC<PanelEditorProps<MapOptions>> = ({ options, o
             type="number"
             name="zoom_level"
             value={inputs.zoom_level}
+            onChange={handleChange}
+          />
+          <FormField
+            label="Other Floor"
+            labelWidth={10}
+            inputWidth={40}
+            type="number"
+            name="other_floor"
+            value={inputs.other_floor}
             onChange={handleChange}
           />
         </div>

@@ -13,7 +13,8 @@
   "devDependencies": {
     "@grafana/data": "next",
     "@grafana/toolkit": "next",
-    "@grafana/ui": "next"
+    "@grafana/ui": "next",
+    "tslib": "^2.1.0"
   },
   "dependencies": {
     "@types/nanoid": "^2.1.0",

@@ -7,7 +7,6 @@ import Arrow from '../../img/arrow.png';
 import Arrow1 from '../../img/arrow1.png';
 
 interface SingleData {
-  // coordinate: [number, number];
   latitude: number;
   longitude: number;
   [key: string]: any;
@@ -75,7 +74,6 @@ export const createLine = (routeData: Coordinate[], iterRoute: number, floorData
   const dy = routeData[iterRoute + 1][1] - routeData[iterRoute][1];
   const rotation = Math.atan2(dy, dx);
   const lineFeature = new Feature(new LineString([routeData[iterRoute], routeData[iterRoute + 1]]));
-  // lineFeature.setProperties({ duration: `${timeData[iterRoute + 1] - timeData[iterRoute]}s` });
   lineFeature.setStyle([
     new Style({
       stroke: new Stroke({
@@ -114,7 +112,6 @@ export const createLineWithLabel = (
   const dy = routeData[iterRoute + 1][1] - routeData[iterRoute][1];
   const rotation = Math.atan2(dy, dx);
   const lineFeature = new Feature(new LineString([routeData[iterRoute], routeData[iterRoute + 1]]));
-  // lineFeature.setProperties({ duration: `${timeData[iterRoute + 1] - timeData[iterRoute]}s` });
   lineFeature.setStyle([
     new Style({
       stroke: new Stroke({
