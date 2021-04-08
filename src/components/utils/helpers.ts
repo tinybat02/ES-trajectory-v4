@@ -2,7 +2,8 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { Coordinate } from 'ol/coordinate';
 import LineString from 'ol/geom/LineString';
-import { Circle, Stroke, Style, Fill, Icon, Text } from 'ol/style';
+import Circle from 'ol/geom/Circle';
+import { /* Circle, */ Stroke, Style, Fill, Icon, Text } from 'ol/style';
 import Arrow from '../../img/arrow.png';
 import Arrow1 from '../../img/arrow1.png';
 
@@ -151,14 +152,20 @@ export const createPoint = (
 
   if (floorData[iterRoute] == other_floor) color = 'rgba(255,176,0,0.6)';
 
-  const pointFeature = new Feature(new Point(routeData[iterRoute]));
+  // const pointFeature = new Feature(new Point(routeData[iterRoute]));
+  // pointFeature.setStyle(
+  //   new Style({
+  //     image: new Circle({
+  //       radius: routeRadiusData[iterRoute] || 2,
+  //       // radius: 5,
+  //       fill: new Fill({ color: color }),
+  //     }),
+  //   })
+  // );
+  const pointFeature = new Feature(new Circle(routeData[iterRoute], routeRadiusData[iterRoute] || 2));
   pointFeature.setStyle(
     new Style({
-      image: new Circle({
-        radius: routeRadiusData[iterRoute] || 2,
-        // radius: 5,
-        fill: new Fill({ color: color }),
-      }),
+      fill: new Fill({ color: color }),
     })
   );
   return pointFeature;

@@ -62357,11 +62357,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ol_Feature__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ol/Feature */ "../node_modules/ol/Feature.js");
 /* harmony import */ var ol_geom_Point__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ol/geom/Point */ "../node_modules/ol/geom/Point.js");
 /* harmony import */ var ol_geom_LineString__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ol/geom/LineString */ "../node_modules/ol/geom/LineString.js");
-/* harmony import */ var ol_style__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ol/style */ "../node_modules/ol/style.js");
-/* harmony import */ var _img_arrow_png__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../img/arrow.png */ "./img/arrow.png");
-/* harmony import */ var _img_arrow_png__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_img_arrow_png__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _img_arrow1_png__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../img/arrow1.png */ "./img/arrow1.png");
-/* harmony import */ var _img_arrow1_png__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_img_arrow1_png__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var ol_geom_Circle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ol/geom/Circle */ "../node_modules/ol/geom/Circle.js");
+/* harmony import */ var ol_style__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ol/style */ "../node_modules/ol/style.js");
+/* harmony import */ var _img_arrow_png__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../img/arrow.png */ "./img/arrow.png");
+/* harmony import */ var _img_arrow_png__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_img_arrow_png__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _img_arrow1_png__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../img/arrow1.png */ "./img/arrow1.png");
+/* harmony import */ var _img_arrow1_png__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_img_arrow1_png__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -62421,21 +62423,21 @@ var processDataES = function processDataES(data) {
 };
 var createLine = function createLine(routeData, iterRoute, floorData, other_floor) {
   var color = 'rgba(73,168,222)';
-  var pic = _img_arrow_png__WEBPACK_IMPORTED_MODULE_4___default.a;
+  var pic = _img_arrow_png__WEBPACK_IMPORTED_MODULE_5___default.a;
   if (floorData[iterRoute] == other_floor) color = 'rgba(255,176,0)';
-  if (floorData[iterRoute + 1] == other_floor) pic = _img_arrow1_png__WEBPACK_IMPORTED_MODULE_5___default.a;
+  if (floorData[iterRoute + 1] == other_floor) pic = _img_arrow1_png__WEBPACK_IMPORTED_MODULE_6___default.a;
   var dx = routeData[iterRoute + 1][0] - routeData[iterRoute][0];
   var dy = routeData[iterRoute + 1][1] - routeData[iterRoute][1];
   var rotation = Math.atan2(dy, dx);
   var lineFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_LineString__WEBPACK_IMPORTED_MODULE_2__["default"]([routeData[iterRoute], routeData[iterRoute + 1]]));
-  lineFeature.setStyle([new ol_style__WEBPACK_IMPORTED_MODULE_3__["Style"]({
-    stroke: new ol_style__WEBPACK_IMPORTED_MODULE_3__["Stroke"]({
+  lineFeature.setStyle([new ol_style__WEBPACK_IMPORTED_MODULE_4__["Style"]({
+    stroke: new ol_style__WEBPACK_IMPORTED_MODULE_4__["Stroke"]({
       color: color,
       width: 2
     })
-  }), new ol_style__WEBPACK_IMPORTED_MODULE_3__["Style"]({
+  }), new ol_style__WEBPACK_IMPORTED_MODULE_4__["Style"]({
     geometry: new ol_geom_Point__WEBPACK_IMPORTED_MODULE_1__["default"](routeData[iterRoute + 1]),
-    image: new ol_style__WEBPACK_IMPORTED_MODULE_3__["Icon"]({
+    image: new ol_style__WEBPACK_IMPORTED_MODULE_4__["Icon"]({
       src: pic,
       anchor: [0.75, 0.5],
       rotateWithView: true,
@@ -62446,29 +62448,29 @@ var createLine = function createLine(routeData, iterRoute, floorData, other_floo
 };
 var createLineWithLabel = function createLineWithLabel(routeData, timeData, iterRoute, floorData, other_floor) {
   var color = 'rgba(73,168,222)';
-  var pic = _img_arrow_png__WEBPACK_IMPORTED_MODULE_4___default.a;
+  var pic = _img_arrow_png__WEBPACK_IMPORTED_MODULE_5___default.a;
   if (floorData[iterRoute] == other_floor) color = 'rgba(255,176,0)';
-  if (floorData[iterRoute + 1] == other_floor) pic = _img_arrow1_png__WEBPACK_IMPORTED_MODULE_5___default.a;
+  if (floorData[iterRoute + 1] == other_floor) pic = _img_arrow1_png__WEBPACK_IMPORTED_MODULE_6___default.a;
   var dx = routeData[iterRoute + 1][0] - routeData[iterRoute][0];
   var dy = routeData[iterRoute + 1][1] - routeData[iterRoute][1];
   var rotation = Math.atan2(dy, dx);
   var lineFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_LineString__WEBPACK_IMPORTED_MODULE_2__["default"]([routeData[iterRoute], routeData[iterRoute + 1]]));
-  lineFeature.setStyle([new ol_style__WEBPACK_IMPORTED_MODULE_3__["Style"]({
-    stroke: new ol_style__WEBPACK_IMPORTED_MODULE_3__["Stroke"]({
+  lineFeature.setStyle([new ol_style__WEBPACK_IMPORTED_MODULE_4__["Style"]({
+    stroke: new ol_style__WEBPACK_IMPORTED_MODULE_4__["Stroke"]({
       color: color,
       width: 2
     }),
-    text: new ol_style__WEBPACK_IMPORTED_MODULE_3__["Text"]({
-      stroke: new ol_style__WEBPACK_IMPORTED_MODULE_3__["Stroke"]({
+    text: new ol_style__WEBPACK_IMPORTED_MODULE_4__["Text"]({
+      stroke: new ol_style__WEBPACK_IMPORTED_MODULE_4__["Stroke"]({
         color: '#fff',
         width: 2
       }),
       font: '18px Calibri,sans-serif',
       text: timeData[iterRoute + 1] - timeData[iterRoute] + "s"
     })
-  }), new ol_style__WEBPACK_IMPORTED_MODULE_3__["Style"]({
+  }), new ol_style__WEBPACK_IMPORTED_MODULE_4__["Style"]({
     geometry: new ol_geom_Point__WEBPACK_IMPORTED_MODULE_1__["default"](routeData[iterRoute + 1]),
-    image: new ol_style__WEBPACK_IMPORTED_MODULE_3__["Icon"]({
+    image: new ol_style__WEBPACK_IMPORTED_MODULE_4__["Icon"]({
       src: pic,
       anchor: [0.75, 0.5],
       rotateWithView: true,
@@ -62479,15 +62481,21 @@ var createLineWithLabel = function createLineWithLabel(routeData, timeData, iter
 };
 var createPoint = function createPoint(routeData, routeRadiusData, iterRoute, floorData, other_floor) {
   var color = 'rgba(73,168,222,0.6)';
-  if (floorData[iterRoute] == other_floor) color = 'rgba(255,176,0,0.6)';
-  var pointFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_Point__WEBPACK_IMPORTED_MODULE_1__["default"](routeData[iterRoute]));
-  pointFeature.setStyle(new ol_style__WEBPACK_IMPORTED_MODULE_3__["Style"]({
-    image: new ol_style__WEBPACK_IMPORTED_MODULE_3__["Circle"]({
-      radius: routeRadiusData[iterRoute] || 2,
-      // radius: 5,
-      fill: new ol_style__WEBPACK_IMPORTED_MODULE_3__["Fill"]({
-        color: color
-      })
+  if (floorData[iterRoute] == other_floor) color = 'rgba(255,176,0,0.6)'; // const pointFeature = new Feature(new Point(routeData[iterRoute]));
+  // pointFeature.setStyle(
+  //   new Style({
+  //     image: new Circle({
+  //       radius: routeRadiusData[iterRoute] || 2,
+  //       // radius: 5,
+  //       fill: new Fill({ color: color }),
+  //     }),
+  //   })
+  // );
+
+  var pointFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_Circle__WEBPACK_IMPORTED_MODULE_3__["default"](routeData[iterRoute], routeRadiusData[iterRoute] || 2));
+  pointFeature.setStyle(new ol_style__WEBPACK_IMPORTED_MODULE_4__["Style"]({
+    fill: new ol_style__WEBPACK_IMPORTED_MODULE_4__["Fill"]({
+      color: color
     })
   }));
   return pointFeature;
