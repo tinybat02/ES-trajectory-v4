@@ -162,19 +162,17 @@ export class MainPanel extends PureComponent<Props> {
       }
     }
 
-    if (prevProps.options.zoom_level !== this.props.options.zoom_level) {
+    if (prevProps.options.zoom_level !== this.props.options.zoom_level)
       this.map.getView().setZoom(this.props.options.zoom_level);
-    }
 
     if (
       prevProps.options.center_lat !== this.props.options.center_lat ||
       prevProps.options.center_lon !== this.props.options.center_lon
-    ) {
+    )
       this.map.getView().animate({
         center: fromLonLat([this.props.options.center_lon, this.props.options.center_lat]),
         duration: 2000,
       });
-    }
 
     if (prevState.current !== this.state.current) {
       this.map.removeLayer(this.partialRoute);
@@ -202,9 +200,10 @@ export class MainPanel extends PureComponent<Props> {
         }
 
         const totalPoints: Feature<Point>[] = [];
-        for (let i = 0; i < routeData.length; i++) {
-          totalPoints.push(createPoint(routeData, uncertaintyData, i, floorData, this.props.options.other_floor));
-        }
+        if (this.props.options.showRadius)
+          for (let i = 0; i < routeData.length; i++) {
+            totalPoints.push(createPoint(routeData, uncertaintyData, i, floorData, this.props.options.other_floor));
+          }
 
         this.totalRoute = new VectorLayer({
           source: new VectorSource({
@@ -216,12 +215,14 @@ export class MainPanel extends PureComponent<Props> {
         this.map.addLayer(this.totalRoute);
 
         const pointFeatures: Feature<Point>[] = [];
+
         const firstPoint = createPoint(routeData, uncertaintyData, 0, floorData, this.props.options.other_floor);
         pointFeatures.push(firstPoint);
         if (routeData.length > 1) {
           const secondPoint = createPoint(routeData, uncertaintyData, 1, floorData, this.props.options.other_floor);
           pointFeatures.push(secondPoint);
         }
+
         this.partialRoute = new VectorLayer({
           source: new VectorSource({
             features: [...partialRoute, ...pointFeatures],

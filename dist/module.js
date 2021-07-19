@@ -61751,16 +61751,11 @@ function (_super) {
       }
     }
 
-    if (prevProps.options.zoom_level !== this.props.options.zoom_level) {
-      this.map.getView().setZoom(this.props.options.zoom_level);
-    }
-
-    if (prevProps.options.center_lat !== this.props.options.center_lat || prevProps.options.center_lon !== this.props.options.center_lon) {
-      this.map.getView().animate({
-        center: Object(ol_proj__WEBPACK_IMPORTED_MODULE_6__["fromLonLat"])([this.props.options.center_lon, this.props.options.center_lat]),
-        duration: 2000
-      });
-    }
+    if (prevProps.options.zoom_level !== this.props.options.zoom_level) this.map.getView().setZoom(this.props.options.zoom_level);
+    if (prevProps.options.center_lat !== this.props.options.center_lat || prevProps.options.center_lon !== this.props.options.center_lon) this.map.getView().animate({
+      center: Object(ol_proj__WEBPACK_IMPORTED_MODULE_6__["fromLonLat"])([this.props.options.center_lon, this.props.options.center_lat]),
+      duration: 2000
+    });
 
     if (prevState.current !== this.state.current) {
       this.map.removeLayer(this.partialRoute);
@@ -61794,11 +61789,9 @@ function (_super) {
         }
 
         var totalPoints = [];
-
-        for (var i = 0; i < routeData.length; i++) {
+        if (this.props.options.showRadius) for (var i = 0; i < routeData.length; i++) {
           totalPoints.push(Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, i, floorData, this.props.options.other_floor));
         }
-
         this.totalRoute = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Vector"]({
           source: new ol_source_Vector__WEBPACK_IMPORTED_MODULE_5__["default"]({
             features: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])(totalPoints, totalRoute)
@@ -62006,6 +61999,12 @@ var PanelEditor = function PanelEditor(_a) {
     });
   };
 
+  var handleClick = function handleClick(e) {
+    setInputs(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, inputs), {
+      showRadius: !inputs.showRadius
+    }));
+  };
+
   var handleSubmit = function handleSubmit() {
     onOptionsChange(inputs);
   };
@@ -62064,7 +62063,19 @@ var PanelEditor = function PanelEditor(_a) {
     name: "other_floor",
     value: inputs.other_floor,
     onChange: handleChange
-  }))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+  }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    className: "gf-form"
+  }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("label", {
+    className: "gf-form-label width-10"
+  }, "Enable Circle"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    className: "gf-form-switch",
+    onClick: handleClick
+  }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+    type: "checkbox",
+    checked: inputs.showRadius
+  }), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("span", {
+    className: "gf-form-switch__slider"
+  }))))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
     className: "btn btn-primary",
     onClick: handleSubmit
   }, "Submit"));
@@ -62595,7 +62606,8 @@ var defaults = {
   tile_url: '',
   tile_other: '',
   zoom_level: 18,
-  other_floor: 1
+  other_floor: 1,
+  showRadius: true
 };
 
 /***/ }),

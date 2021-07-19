@@ -5,6 +5,7 @@ export interface MapOptions {
   tile_other: string;
   zoom_level: number;
   other_floor: number;
+  showRadius: boolean;
 }
 
 export const defaults: MapOptions = {
@@ -14,4 +15,5 @@ export const defaults: MapOptions = {
   tile_other: '',
   zoom_level: 18,
   other_floor: 1,
+  showRadius: true,
 };

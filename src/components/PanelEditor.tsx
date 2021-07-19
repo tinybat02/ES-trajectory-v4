@@ -16,6 +16,10 @@ export const PanelEditor: React.FC<PanelEditorProps<MapOptions>> = ({ options, o
     }));
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    setInputs({ ...inputs, showRadius: !inputs.showRadius });
+  };
+
   const handleSubmit = () => {
     onOptionsChange(inputs);
   };
@@ -79,6 +83,14 @@ export const PanelEditor: React.FC<PanelEditorProps<MapOptions>> = ({ options, o
             value={inputs.other_floor}
             onChange={handleChange}
           />
+
+          <div className="gf-form">
+            <label className="gf-form-label width-10">Enable Circle</label>
+            <div className="gf-form-switch" onClick={handleClick}>
+              <input type="checkbox" checked={inputs.showRadius} />
+              <span className="gf-form-switch__slider"></span>
+            </div>
+          </div>
         </div>
       </div>
 
