@@ -489,9 +489,15 @@ export class MainPanel extends PureComponent<Props> {
                     this.perDeviceTime[current][iterRoute] * 1000
                   )
                     .toLocaleString('de-DE')
-                    .replace(/\./g, '/')} -- End: ${new Date(this.perDeviceTime[current][iterRoute + 1] * 1000)
-                    .toLocaleString('de-DE')
-                    .replace(/\./g, '/')}`}
+                    .replace(/\./g, '/')} -- End: ${
+                    showTotalRoute
+                      ? new Date(this.perDeviceTime[current][routeLength - 1] * 1000)
+                          .toLocaleString('de-DE')
+                          .replace(/\./g, '/')
+                      : new Date(this.perDeviceTime[current][iterRoute + 1] * 1000)
+                          .toLocaleString('de-DE')
+                          .replace(/\./g, '/')
+                  }`}
                 </span>
               )}
             </div>

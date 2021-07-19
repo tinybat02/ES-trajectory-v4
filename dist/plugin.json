@@ -8,10 +8,14 @@
     "author": {
       "name": "Nam Le"
     },
-    "keywords": ["openlayers", "trajectory", "elasticsearch"],
+    "keywords": ["trajectory", "elasticsearch"],
+    "logos": {
+      "small": "img/Traj.svg",
+      "large": "img/Traj.svg"
+    },
     "screenshots": [],
     "version": "0.0.1",
-    "updated": "2021-04-08"
+    "updated": "2021-07-19"
   },
 
   "dependencies": {

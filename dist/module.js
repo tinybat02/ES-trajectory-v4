@@ -61940,7 +61940,7 @@ function (_super) {
       style: {
         marginLeft: 10
       }
-    }, current + " " + (iterRoute + 1) + " / " + (routeLength - 1) + " -- Begin: " + new Date(this.perDeviceTime[current][iterRoute] * 1000).toLocaleString('de-DE').replace(/\./g, '/') + " -- End: " + new Date(this.perDeviceTime[current][iterRoute + 1] * 1000).toLocaleString('de-DE').replace(/\./g, '/')))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    }, current + " " + (iterRoute + 1) + " / " + (routeLength - 1) + " -- Begin: " + new Date(this.perDeviceTime[current][iterRoute] * 1000).toLocaleString('de-DE').replace(/\./g, '/') + " -- End: " + (showTotalRoute ? new Date(this.perDeviceTime[current][routeLength - 1] * 1000).toLocaleString('de-DE').replace(/\./g, '/') : new Date(this.perDeviceTime[current][iterRoute + 1] * 1000).toLocaleString('de-DE').replace(/\./g, '/'))))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       style: {
         width: '100%',
         padding: 10,
@@ -62491,8 +62491,9 @@ var createPoint = function createPoint(routeData, routeRadiusData, iterRoute, fl
   //     }),
   //   })
   // );
+  // const pointFeature = new Feature(new Circle(routeData[iterRoute], routeRadiusData[iterRoute] || 2));
 
-  var pointFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_Circle__WEBPACK_IMPORTED_MODULE_3__["default"](routeData[iterRoute], routeRadiusData[iterRoute] || 2));
+  var pointFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_Circle__WEBPACK_IMPORTED_MODULE_3__["default"](routeData[iterRoute], 0));
   pointFeature.setStyle(new ol_style__WEBPACK_IMPORTED_MODULE_4__["Style"]({
     fill: new ol_style__WEBPACK_IMPORTED_MODULE_4__["Fill"]({
       color: color
