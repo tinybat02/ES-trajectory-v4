@@ -162,8 +162,7 @@ export const createPoint = (
   //     }),
   //   })
   // );
-  // const pointFeature = new Feature(new Circle(routeData[iterRoute], routeRadiusData[iterRoute] || 2));
-  const pointFeature = new Feature(new Circle(routeData[iterRoute], 0));
+  const pointFeature = new Feature(new Circle(routeData[iterRoute], routeRadiusData[iterRoute] || 2));
   pointFeature.setStyle(
     new Style({
       fill: new Fill({ color: color }),

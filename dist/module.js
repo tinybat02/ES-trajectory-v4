@@ -62491,9 +62491,8 @@ var createPoint = function createPoint(routeData, routeRadiusData, iterRoute, fl
   //     }),
   //   })
   // );
-  // const pointFeature = new Feature(new Circle(routeData[iterRoute], routeRadiusData[iterRoute] || 2));
 
-  var pointFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_Circle__WEBPACK_IMPORTED_MODULE_3__["default"](routeData[iterRoute], 0));
+  var pointFeature = new ol_Feature__WEBPACK_IMPORTED_MODULE_0__["default"](new ol_geom_Circle__WEBPACK_IMPORTED_MODULE_3__["default"](routeData[iterRoute], routeRadiusData[iterRoute] || 2));
   pointFeature.setStyle(new ol_style__WEBPACK_IMPORTED_MODULE_4__["Style"]({
     fill: new ol_style__WEBPACK_IMPORTED_MODULE_4__["Fill"]({
       color: color
