@@ -398,28 +398,44 @@ export class MainPanel extends PureComponent<Props> {
   };
 
   onSliding = (value: number) => {
-    this.setState({ iterRoute: value });
+    this.setState({ iterRoute: value }, () => {
+      this.map.removeLayer(this.partialRoute);
+
+      const routeData = this.perDeviceRoute[this.state.current].map(coordinate => fromLonLat(coordinate));
+      const timeData = this.perDeviceTime[this.state.current];
+      const uncertaintyData = this.perDeviceUncertainty[this.state.current];
+      const floorData = this.perDeviceFloor[this.state.current];
+
+      const lineFeature = createLineWithLabel(routeData, timeData, value, floorData, this.props.options.other_floor);
+      const beginPoint = createPoint(routeData, uncertaintyData, value, floorData, this.props.options.other_floor);
+      const endPoint = createPoint(routeData, uncertaintyData, value + 1, floorData, this.props.options.other_floor);
+
+      this.partialRoute = new VectorLayer({
+        source: new VectorSource({
+          features: [lineFeature, beginPoint, endPoint],
+        }),
+        zIndex: 2,
+      });
+      this.map.addLayer(this.partialRoute);
+    });
   };
 
   onSlider = (value: number) => {
-    this.map.removeLayer(this.partialRoute);
-
-    const routeData = this.perDeviceRoute[this.state.current].map(coordinate => fromLonLat(coordinate));
-    const timeData = this.perDeviceTime[this.state.current];
-    const uncertaintyData = this.perDeviceUncertainty[this.state.current];
-    const floorData = this.perDeviceFloor[this.state.current];
-
-    const lineFeature = createLineWithLabel(routeData, timeData, value, floorData, this.props.options.other_floor);
-    const beginPoint = createPoint(routeData, uncertaintyData, value, floorData, this.props.options.other_floor);
-    const endPoint = createPoint(routeData, uncertaintyData, value + 1, floorData, this.props.options.other_floor);
-
-    this.partialRoute = new VectorLayer({
-      source: new VectorSource({
-        features: [lineFeature, beginPoint, endPoint],
-      }),
-      zIndex: 2,
-    });
-    this.map.addLayer(this.partialRoute);
+    // this.map.removeLayer(this.partialRoute);
+    // const routeData = this.perDeviceRoute[this.state.current].map(coordinate => fromLonLat(coordinate));
+    // const timeData = this.perDeviceTime[this.state.current];
+    // const uncertaintyData = this.perDeviceUncertainty[this.state.current];
+    // const floorData = this.perDeviceFloor[this.state.current];
+    // const lineFeature = createLineWithLabel(routeData, timeData, value, floorData, this.props.options.other_floor);
+    // const beginPoint = createPoint(routeData, uncertaintyData, value, floorData, this.props.options.other_floor);
+    // const endPoint = createPoint(routeData, uncertaintyData, value + 1, floorData, this.props.options.other_floor);
+    // this.partialRoute = new VectorLayer({
+    //   source: new VectorSource({
+    //     features: [lineFeature, beginPoint, endPoint],
+    //   }),
+    //   zIndex: 2,
+    // });
+    // this.map.addLayer(this.partialRoute);
   };
 
   handleSearch = (record: { key: string; value: string }) => {

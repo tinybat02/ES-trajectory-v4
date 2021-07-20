@@ -61595,30 +61595,45 @@ function (_super) {
     _this.onSliding = function (value) {
       _this.setState({
         iterRoute: value
+      }, function () {
+        _this.map.removeLayer(_this.partialRoute);
+
+        var routeData = _this.perDeviceRoute[_this.state.current].map(function (coordinate) {
+          return Object(ol_proj__WEBPACK_IMPORTED_MODULE_6__["fromLonLat"])(coordinate);
+        });
+
+        var timeData = _this.perDeviceTime[_this.state.current];
+        var uncertaintyData = _this.perDeviceUncertainty[_this.state.current];
+        var floorData = _this.perDeviceFloor[_this.state.current];
+        var lineFeature = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLineWithLabel"])(routeData, timeData, value, floorData, _this.props.options.other_floor);
+        var beginPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, value, floorData, _this.props.options.other_floor);
+        var endPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, value + 1, floorData, _this.props.options.other_floor);
+        _this.partialRoute = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Vector"]({
+          source: new ol_source_Vector__WEBPACK_IMPORTED_MODULE_5__["default"]({
+            features: [lineFeature, beginPoint, endPoint]
+          }),
+          zIndex: 2
+        });
+
+        _this.map.addLayer(_this.partialRoute);
       });
     };
 
-    _this.onSlider = function (value) {
-      _this.map.removeLayer(_this.partialRoute);
-
-      var routeData = _this.perDeviceRoute[_this.state.current].map(function (coordinate) {
-        return Object(ol_proj__WEBPACK_IMPORTED_MODULE_6__["fromLonLat"])(coordinate);
-      });
-
-      var timeData = _this.perDeviceTime[_this.state.current];
-      var uncertaintyData = _this.perDeviceUncertainty[_this.state.current];
-      var floorData = _this.perDeviceFloor[_this.state.current];
-      var lineFeature = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLineWithLabel"])(routeData, timeData, value, floorData, _this.props.options.other_floor);
-      var beginPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, value, floorData, _this.props.options.other_floor);
-      var endPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, value + 1, floorData, _this.props.options.other_floor);
-      _this.partialRoute = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Vector"]({
-        source: new ol_source_Vector__WEBPACK_IMPORTED_MODULE_5__["default"]({
-          features: [lineFeature, beginPoint, endPoint]
-        }),
-        zIndex: 2
-      });
-
-      _this.map.addLayer(_this.partialRoute);
+    _this.onSlider = function (value) {// this.map.removeLayer(this.partialRoute);
+      // const routeData = this.perDeviceRoute[this.state.current].map(coordinate => fromLonLat(coordinate));
+      // const timeData = this.perDeviceTime[this.state.current];
+      // const uncertaintyData = this.perDeviceUncertainty[this.state.current];
+      // const floorData = this.perDeviceFloor[this.state.current];
+      // const lineFeature = createLineWithLabel(routeData, timeData, value, floorData, this.props.options.other_floor);
+      // const beginPoint = createPoint(routeData, uncertaintyData, value, floorData, this.props.options.other_floor);
+      // const endPoint = createPoint(routeData, uncertaintyData, value + 1, floorData, this.props.options.other_floor);
+      // this.partialRoute = new VectorLayer({
+      //   source: new VectorSource({
+      //     features: [lineFeature, beginPoint, endPoint],
+      //   }),
+      //   zIndex: 2,
+      // });
+      // this.map.addLayer(this.partialRoute);
     };
 
     _this.handleSearch = function (record) {
