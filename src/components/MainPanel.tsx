@@ -216,11 +216,13 @@ export class MainPanel extends PureComponent<Props> {
 
         const pointFeatures: Feature<Point>[] = [];
 
-        const firstPoint = createPoint(routeData, uncertaintyData, 0, floorData, this.props.options.other_floor);
-        pointFeatures.push(firstPoint);
-        if (routeData.length > 1) {
-          const secondPoint = createPoint(routeData, uncertaintyData, 1, floorData, this.props.options.other_floor);
-          pointFeatures.push(secondPoint);
+        if (this.props.options.showRadius) {
+          const firstPoint = createPoint(routeData, uncertaintyData, 0, floorData, this.props.options.other_floor);
+          pointFeatures.push(firstPoint);
+          if (routeData.length > 1) {
+            const secondPoint = createPoint(routeData, uncertaintyData, 1, floorData, this.props.options.other_floor);
+            pointFeatures.push(secondPoint);
+          }
         }
 
         this.partialRoute = new VectorLayer({
@@ -278,42 +280,61 @@ export class MainPanel extends PureComponent<Props> {
     const timeData = this.perDeviceTime[this.state.current];
     const uncertaintyData = this.perDeviceUncertainty[this.state.current];
     const floorData = this.perDeviceFloor[this.state.current];
+    const { other_floor, tile_url, tile_other } = this.props.options;
 
     const { iterRoute } = this.state;
-    if (type === 'previous' && iterRoute > 0) {
-      this.map.removeLayer(this.partialRoute);
-      this.setState({ iterRoute: iterRoute - 1 }, () => {
-        if (
-          this.state.iterRoute < floorData.length - 2 &&
-          floorData[this.state.iterRoute + 1] != floorData[this.state.iterRoute + 2]
-        ) {
-          if (this.props.options.tile_url == '' || this.props.options.tile_other == '') return;
-          this.map.removeLayer(this.randomTile);
-          if (floorData[this.state.iterRoute + 2] == this.props.options.other_floor) {
-            this.randomTile = new TileLayer({
-              source: new XYZ({
-                url: this.props.options.tile_url,
-              }),
-              zIndex: 1,
-            });
-            this.map.addLayer(this.randomTile);
-          } else {
-            this.randomTile = new TileLayer({
-              source: new XYZ({
-                url: this.props.options.tile_other,
-              }),
-              zIndex: 1,
-            });
-            this.map.addLayer(this.randomTile);
-          }
-        }
-        const lineFeature = createLineWithLabel(
-          routeData,
-          timeData,
-          this.state.iterRoute,
-          floorData,
-          this.props.options.other_floor
-        );
+    if ((type == 'previous' && iterRoute <= 0) || (type == 'next' && iterRoute >= routeData.length - 2)) return;
+
+    let newIter = 0;
+    if (type == 'previous') newIter = iterRoute - 1;
+    if (type == 'next') newIter = iterRoute + 1;
+
+    this.map.removeLayer(this.partialRoute);
+
+    this.setState({ iterRoute: newIter }, () => {
+      if (type == 'previous' && floorData[this.state.iterRoute + 1] != floorData[this.state.iterRoute + 2]) {
+        this.map.removeLayer(this.randomTile);
+
+        let url = '';
+        if (floorData[this.state.iterRoute + 2] == other_floor) url = tile_url;
+        else url = tile_other;
+
+        this.randomTile = new TileLayer({
+          source: new XYZ({
+            url: url,
+          }),
+          zIndex: 1,
+        });
+        this.map.addLayer(this.randomTile);
+      }
+
+      if (type == 'next' && floorData[this.state.iterRoute] != floorData[this.state.iterRoute + 1]) {
+        this.map.removeLayer(this.randomTile);
+
+        let url = '';
+        if (floorData[this.state.iterRoute + 1] == other_floor) url = tile_other;
+        else url = tile_url;
+
+        this.randomTile = new TileLayer({
+          source: new XYZ({
+            url: url,
+          }),
+          zIndex: 1,
+        });
+        this.map.addLayer(this.randomTile);
+      }
+
+      const lineFeature = createLineWithLabel(
+        routeData,
+        timeData,
+        this.state.iterRoute,
+        floorData,
+        this.props.options.other_floor
+      );
+
+      const points: Feature[] = [];
+
+      if (this.props.options.showRadius) {
         const beginPoint = createPoint(
           routeData,
           uncertaintyData,
@@ -329,72 +350,17 @@ export class MainPanel extends PureComponent<Props> {
           this.props.options.other_floor
         );
 
-        this.partialRoute = new VectorLayer({
-          source: new VectorSource({
-            features: [lineFeature, beginPoint, endPoint],
-          }),
-          zIndex: 2,
-        });
-        this.map.addLayer(this.partialRoute);
+        points.push(beginPoint, endPoint);
+      }
+
+      this.partialRoute = new VectorLayer({
+        source: new VectorSource({
+          features: [lineFeature, ...points],
+        }),
+        zIndex: 2,
       });
-    }
-
-    if (type === 'next' && iterRoute < routeData.length - 2) {
-      this.partialRoute && this.map.removeLayer(this.partialRoute);
-      this.setState({ iterRoute: iterRoute + 1 }, () => {
-        if (floorData[this.state.iterRoute] != floorData[this.state.iterRoute + 1]) {
-          if (this.props.options.tile_url == '' || this.props.options.tile_other == '') return;
-          this.map.removeLayer(this.randomTile);
-
-          if (floorData[this.state.iterRoute + 1] == this.props.options.other_floor) {
-            this.randomTile = new TileLayer({
-              source: new XYZ({
-                url: this.props.options.tile_other,
-              }),
-              zIndex: 1,
-            });
-            this.map.addLayer(this.randomTile);
-          } else {
-            this.randomTile = new TileLayer({
-              source: new XYZ({
-                url: this.props.options.tile_url,
-              }),
-              zIndex: 1,
-            });
-            this.map.addLayer(this.randomTile);
-          }
-        }
-        const lineFeature = createLineWithLabel(
-          routeData,
-          timeData,
-          this.state.iterRoute,
-          floorData,
-          this.props.options.other_floor
-        );
-        const beginPoint = createPoint(
-          routeData,
-          uncertaintyData,
-          this.state.iterRoute,
-          floorData,
-          this.props.options.other_floor
-        );
-        const endPoint = createPoint(
-          routeData,
-          uncertaintyData,
-          this.state.iterRoute + 1,
-          floorData,
-          this.props.options.other_floor
-        );
-
-        this.partialRoute = new VectorLayer({
-          source: new VectorSource({
-            features: [lineFeature, beginPoint, endPoint],
-          }),
-          zIndex: 2,
-        });
-        this.map.addLayer(this.partialRoute);
-      });
-    }
+      this.map.addLayer(this.partialRoute);
+    });
   };
 
   onSliding = (value: number) => {

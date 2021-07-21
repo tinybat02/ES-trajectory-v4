@@ -61496,99 +61496,69 @@ function (_super) {
         var timeData = _this.perDeviceTime[_this.state.current];
         var uncertaintyData = _this.perDeviceUncertainty[_this.state.current];
         var floorData = _this.perDeviceFloor[_this.state.current];
+        var _a = _this.props.options,
+            other_floor = _a.other_floor,
+            tile_url = _a.tile_url,
+            tile_other = _a.tile_other;
         var iterRoute = _this.state.iterRoute;
+        if (type == 'previous' && iterRoute <= 0 || type == 'next' && iterRoute >= routeData.length - 2) return;
+        var newIter = 0;
+        if (type == 'previous') newIter = iterRoute - 1;
+        if (type == 'next') newIter = iterRoute + 1;
 
-        if (type === 'previous' && iterRoute > 0) {
-          _this.map.removeLayer(_this.partialRoute);
+        _this.map.removeLayer(_this.partialRoute);
 
-          _this.setState({
-            iterRoute: iterRoute - 1
-          }, function () {
-            if (_this.state.iterRoute < floorData.length - 2 && floorData[_this.state.iterRoute + 1] != floorData[_this.state.iterRoute + 2]) {
-              if (_this.props.options.tile_url == '' || _this.props.options.tile_other == '') return;
+        _this.setState({
+          iterRoute: newIter
+        }, function () {
+          if (type == 'previous' && floorData[_this.state.iterRoute + 1] != floorData[_this.state.iterRoute + 2]) {
+            _this.map.removeLayer(_this.randomTile);
 
-              _this.map.removeLayer(_this.randomTile);
-
-              if (floorData[_this.state.iterRoute + 2] == _this.props.options.other_floor) {
-                _this.randomTile = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Tile"]({
-                  source: new ol_source_XYZ__WEBPACK_IMPORTED_MODULE_3__["default"]({
-                    url: _this.props.options.tile_url
-                  }),
-                  zIndex: 1
-                });
-
-                _this.map.addLayer(_this.randomTile);
-              } else {
-                _this.randomTile = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Tile"]({
-                  source: new ol_source_XYZ__WEBPACK_IMPORTED_MODULE_3__["default"]({
-                    url: _this.props.options.tile_other
-                  }),
-                  zIndex: 1
-                });
-
-                _this.map.addLayer(_this.randomTile);
-              }
-            }
-
-            var lineFeature = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLineWithLabel"])(routeData, timeData, _this.state.iterRoute, floorData, _this.props.options.other_floor);
-            var beginPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, _this.state.iterRoute, floorData, _this.props.options.other_floor);
-            var endPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, _this.state.iterRoute + 1, floorData, _this.props.options.other_floor);
-            _this.partialRoute = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Vector"]({
-              source: new ol_source_Vector__WEBPACK_IMPORTED_MODULE_5__["default"]({
-                features: [lineFeature, beginPoint, endPoint]
+            var url = '';
+            if (floorData[_this.state.iterRoute + 2] == other_floor) url = tile_url;else url = tile_other;
+            _this.randomTile = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Tile"]({
+              source: new ol_source_XYZ__WEBPACK_IMPORTED_MODULE_3__["default"]({
+                url: url
               }),
-              zIndex: 2
+              zIndex: 1
             });
 
-            _this.map.addLayer(_this.partialRoute);
-          });
-        }
+            _this.map.addLayer(_this.randomTile);
+          }
 
-        if (type === 'next' && iterRoute < routeData.length - 2) {
-          _this.partialRoute && _this.map.removeLayer(_this.partialRoute);
+          if (type == 'next' && floorData[_this.state.iterRoute] != floorData[_this.state.iterRoute + 1]) {
+            _this.map.removeLayer(_this.randomTile);
 
-          _this.setState({
-            iterRoute: iterRoute + 1
-          }, function () {
-            if (floorData[_this.state.iterRoute] != floorData[_this.state.iterRoute + 1]) {
-              if (_this.props.options.tile_url == '' || _this.props.options.tile_other == '') return;
-
-              _this.map.removeLayer(_this.randomTile);
-
-              if (floorData[_this.state.iterRoute + 1] == _this.props.options.other_floor) {
-                _this.randomTile = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Tile"]({
-                  source: new ol_source_XYZ__WEBPACK_IMPORTED_MODULE_3__["default"]({
-                    url: _this.props.options.tile_other
-                  }),
-                  zIndex: 1
-                });
-
-                _this.map.addLayer(_this.randomTile);
-              } else {
-                _this.randomTile = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Tile"]({
-                  source: new ol_source_XYZ__WEBPACK_IMPORTED_MODULE_3__["default"]({
-                    url: _this.props.options.tile_url
-                  }),
-                  zIndex: 1
-                });
-
-                _this.map.addLayer(_this.randomTile);
-              }
-            }
-
-            var lineFeature = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLineWithLabel"])(routeData, timeData, _this.state.iterRoute, floorData, _this.props.options.other_floor);
-            var beginPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, _this.state.iterRoute, floorData, _this.props.options.other_floor);
-            var endPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, _this.state.iterRoute + 1, floorData, _this.props.options.other_floor);
-            _this.partialRoute = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Vector"]({
-              source: new ol_source_Vector__WEBPACK_IMPORTED_MODULE_5__["default"]({
-                features: [lineFeature, beginPoint, endPoint]
+            var url = '';
+            if (floorData[_this.state.iterRoute + 1] == other_floor) url = tile_other;else url = tile_url;
+            _this.randomTile = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Tile"]({
+              source: new ol_source_XYZ__WEBPACK_IMPORTED_MODULE_3__["default"]({
+                url: url
               }),
-              zIndex: 2
+              zIndex: 1
             });
 
-            _this.map.addLayer(_this.partialRoute);
+            _this.map.addLayer(_this.randomTile);
+          }
+
+          var lineFeature = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLineWithLabel"])(routeData, timeData, _this.state.iterRoute, floorData, _this.props.options.other_floor);
+          var points = [];
+
+          if (_this.props.options.showRadius) {
+            var beginPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, _this.state.iterRoute, floorData, _this.props.options.other_floor);
+            var endPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, _this.state.iterRoute + 1, floorData, _this.props.options.other_floor);
+            points.push(beginPoint, endPoint);
+          }
+
+          _this.partialRoute = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Vector"]({
+            source: new ol_source_Vector__WEBPACK_IMPORTED_MODULE_5__["default"]({
+              features: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])([lineFeature], points)
+            }),
+            zIndex: 2
           });
-        }
+
+          _this.map.addLayer(_this.partialRoute);
+        });
       };
     };
 
@@ -61815,12 +61785,15 @@ function (_super) {
         });
         this.map.addLayer(this.totalRoute);
         var pointFeatures = [];
-        var firstPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, 0, floorData, this.props.options.other_floor);
-        pointFeatures.push(firstPoint);
 
-        if (routeData.length > 1) {
-          var secondPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, 1, floorData, this.props.options.other_floor);
-          pointFeatures.push(secondPoint);
+        if (this.props.options.showRadius) {
+          var firstPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, 0, floorData, this.props.options.other_floor);
+          pointFeatures.push(firstPoint);
+
+          if (routeData.length > 1) {
+            var secondPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, 1, floorData, this.props.options.other_floor);
+            pointFeatures.push(secondPoint);
+          }
         }
 
         this.partialRoute = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Vector"]({
