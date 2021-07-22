@@ -61881,7 +61881,7 @@ function (_super) {
       return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
         key: item,
         value: item
-      }, item + " - " + _this.perDeviceVendor[item]);
+      }, item);
     })), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       style: {
         width: 350,

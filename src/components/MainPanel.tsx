@@ -427,7 +427,7 @@ export class MainPanel extends PureComponent<Props> {
                   <option value="None">None</option>
                   {options.map(item => (
                     <option key={item} value={item}>
-                      {`${item} - ${this.perDeviceVendor[item]}`}
+                      {item}
                     </option>
                   ))}
                 </select>
