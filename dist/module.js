@@ -61576,11 +61576,17 @@ function (_super) {
         var uncertaintyData = _this.perDeviceUncertainty[_this.state.current];
         var floorData = _this.perDeviceFloor[_this.state.current];
         var lineFeature = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createLineWithLabel"])(routeData, timeData, value, floorData, _this.props.options.other_floor);
-        var beginPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, value, floorData, _this.props.options.other_floor);
-        var endPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, value + 1, floorData, _this.props.options.other_floor);
+        var points = [];
+
+        if (_this.props.options.showRadius) {
+          var beginPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, value, floorData, _this.props.options.other_floor);
+          var endPoint = Object(_utils_helpers__WEBPACK_IMPORTED_MODULE_10__["createPoint"])(routeData, uncertaintyData, value + 1, floorData, _this.props.options.other_floor);
+          points.push(beginPoint, endPoint);
+        }
+
         _this.partialRoute = new ol_layer__WEBPACK_IMPORTED_MODULE_4__["Vector"]({
           source: new ol_source_Vector__WEBPACK_IMPORTED_MODULE_5__["default"]({
-            features: [lineFeature, beginPoint, endPoint]
+            features: Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__spread"])([lineFeature], points)
           }),
           zIndex: 2
         });

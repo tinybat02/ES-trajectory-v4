@@ -373,12 +373,15 @@ export class MainPanel extends PureComponent<Props> {
       const floorData = this.perDeviceFloor[this.state.current];
 
       const lineFeature = createLineWithLabel(routeData, timeData, value, floorData, this.props.options.other_floor);
-      const beginPoint = createPoint(routeData, uncertaintyData, value, floorData, this.props.options.other_floor);
-      const endPoint = createPoint(routeData, uncertaintyData, value + 1, floorData, this.props.options.other_floor);
-
+      const points: Feature[] = [];
+      if (this.props.options.showRadius) {
+        const beginPoint = createPoint(routeData, uncertaintyData, value, floorData, this.props.options.other_floor);
+        const endPoint = createPoint(routeData, uncertaintyData, value + 1, floorData, this.props.options.other_floor);
+        points.push(beginPoint, endPoint);
+      }
       this.partialRoute = new VectorLayer({
         source: new VectorSource({
-          features: [lineFeature, beginPoint, endPoint],
+          features: [lineFeature, ...points],
         }),
         zIndex: 2,
       });
