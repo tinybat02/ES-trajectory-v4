@@ -1,18 +1,28 @@
 import React, { PureComponent } from 'react';
 import { PanelProps, Vector as VectorData } from '@grafana/data';
 import { MapOptions } from '../types';
-import { Map, View } from 'ol';
+import { Map, View, Overlay } from 'ol';
 import XYZ from 'ol/source/XYZ';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import LineString from 'ol/geom/LineString';
+import { unByKey } from 'ol/Observable';
+import { EventsKey } from 'ol/events';
 import { fromLonLat } from 'ol/proj';
 import { defaults, DragPan, MouseWheelZoom } from 'ol/interaction';
 import { platformModifierKeyOnly } from 'ol/events/condition';
 import nanoid from 'nanoid';
-import { processDataES, createLine, createPoint, createLineWithLabel } from './utils/helpers';
+import {
+  processDataES,
+  createLine,
+  createPoint,
+  createLineWithLabel,
+  createMeasureLayer,
+  createDraw,
+  formatLength,
+} from './utils/helpers';
 import { CustomSlider } from './common/CustomSlider';
 import ReactSearchBox from 'react-search-box';
 import 'ol/ol.css';
@@ -43,6 +53,8 @@ export class MainPanel extends PureComponent<Props> {
   perDeviceVendor: { [key: string]: string } = {};
   partialRoute: VectorLayer;
   totalRoute: VectorLayer;
+  measureLayer: VectorLayer;
+  listener: EventsKey | undefined;
 
   state: State = {
     options: [],
@@ -87,6 +99,10 @@ export class MainPanel extends PureComponent<Props> {
       target: this.id,
     });
 
+    let measureSource = new VectorSource();
+    this.measureLayer = createMeasureLayer(measureSource);
+    this.map.addLayer(this.measureLayer);
+
     if (tile_url !== '') {
       this.randomTile = new TileLayer({
         source: new XYZ({
@@ -96,6 +112,53 @@ export class MainPanel extends PureComponent<Props> {
       });
       this.map.addLayer(this.randomTile);
     }
+
+    let measureDraw = createDraw(measureSource);
+    this.map.addInteraction(measureDraw);
+    let measureTooltipElement: HTMLElement = document.createElement('div');
+    let measureTooltip: Overlay | null = null;
+
+    const createMeasureTooltip = () => {
+      if (measureTooltipElement && measureTooltipElement.parentNode) {
+        measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+      }
+      measureTooltipElement = document.createElement('div');
+      measureTooltipElement.className = 'ol-tooltip ol-tooltip-measure';
+      measureTooltip = new Overlay({
+        element: measureTooltipElement,
+        offset: [0, -15],
+        //@ts-ignore
+        positioning: 'bottom-center',
+      });
+      this.map.addOverlay(measureTooltip);
+    };
+    createMeasureTooltip();
+
+    let sketch = null;
+    measureDraw.on('drawstart', evt => {
+      sketch = evt.feature as Feature<LineString>;
+
+      //@ts-ignore
+      let tooltipCoord = evt.coordinate;
+
+      this.listener = sketch.getGeometry()?.on('change', evt => {
+        const geom = evt.target as LineString;
+
+        const output = formatLength(new LineString(geom.getCoordinates().slice(-2)));
+        tooltipCoord = geom.getLastCoordinate();
+        geom.getCoordinates().slice(-2);
+
+        if (measureTooltipElement) measureTooltipElement.innerHTML = output;
+        measureTooltip?.setPosition(tooltipCoord);
+      });
+    });
+
+    measureDraw.on('drawend', evt => {
+      this.map.removeLayer(this.measureLayer);
+      measureTooltipElement?.parentNode?.removeChild(measureTooltipElement);
+      createMeasureTooltip();
+      if (this.listener) unByKey(this.listener);
+    });
 
     if (this.props.data.series.length > 0) {
       const { buffer } = this.props.data.series[0].fields[0].values as Buffer;

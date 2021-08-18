@@ -3,7 +3,13 @@ import Point from 'ol/geom/Point';
 import { Coordinate } from 'ol/coordinate';
 import LineString from 'ol/geom/LineString';
 import Circle from 'ol/geom/Circle';
-import { /* Circle, */ Stroke, Style, Fill, Icon, Text } from 'ol/style';
+import { Circle as CircleStyle, Stroke, Style, Fill, Icon, Text } from 'ol/style';
+import GeometryType from 'ol/geom/GeometryType';
+import { Draw } from 'ol/interaction';
+import { Vector as VectorLayer } from 'ol/layer';
+import { Vector as VectorSource } from 'ol/source';
+import { FeatureLike } from 'ol/Feature';
+import { getLength } from 'ol/sphere';
 import Arrow from '../../img/arrow.png';
 import Arrow1 from '../../img/arrow1.png';
 
@@ -12,6 +18,17 @@ interface SingleData {
   longitude: number;
   [key: string]: any;
 }
+
+export const formatLength = function(line: LineString) {
+  const length = getLength(line);
+  let output;
+  if (length > 100) {
+    output = Math.round((length / 1000) * 100) / 100 + ' ' + 'km';
+  } else {
+    output = Math.round(length * 100) / 100 + ' ' + 'm';
+  }
+  return output;
+};
 
 export const processDataES = (data: SingleData[]) => {
   data.reverse();
@@ -169,4 +186,74 @@ export const createPoint = (
     })
   );
   return pointFeature;
+};
+
+export const createMeasureLayer = (source: VectorSource) => {
+  return new VectorLayer({
+    source: source,
+
+    style: function(feature: FeatureLike) {
+      const geometry = feature.getGeometry() as LineString;
+
+      const line_styles = [
+        new Style({
+          fill: new Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+          }),
+          stroke: new Stroke({
+            color: 'rgba(0, 0, 0, 0.5)',
+            width: 2,
+          }),
+        }),
+      ];
+
+      geometry.forEachSegment(function(start, end) {
+        const linestring = new LineString([start, end]);
+        const len = formatLength(linestring);
+
+        line_styles.push(
+          new Style({
+            geometry: linestring,
+            text: new Text({
+              fill: new Fill({ color: '#000' }),
+              stroke: new Stroke({
+                color: '#fff',
+                width: 2,
+              }),
+              font: '12px/1 sans-serif',
+              text: len,
+            }),
+          })
+        );
+      });
+      return line_styles;
+    },
+    zIndex: 2,
+  });
+};
+
+export const createDraw = (source: VectorSource) => {
+  return new Draw({
+    source: source,
+    type: GeometryType.LINE_STRING,
+    style: new Style({
+      fill: new Fill({
+        color: 'rgba(255, 255, 255, 0.2)',
+      }),
+      stroke: new Stroke({
+        color: 'rgba(0, 0, 0, 0.5)',
+        lineDash: [10, 10],
+        width: 2,
+      }),
+      image: new CircleStyle({
+        radius: 5,
+        stroke: new Stroke({
+          color: 'rgba(0, 0, 0, 0.7)',
+        }),
+        fill: new Fill({
+          color: 'rgba(255, 255, 255, 0.2)',
+        }),
+      }),
+    }),
+  });
 };
