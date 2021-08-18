@@ -229,7 +229,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "../node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(true);
 // Module
-exports.push([module.i, ".custom-btn {\n  padding: 0.6em 1.2em;\n  margin-left: 0.2em;\n  border-radius: 3px;\n  border: none;\n  font-weight: 400;\n  color: #ffffff;\n  background-color: #326666;\n  text-align: center; }\n\n.custom-btn:active {\n  background-color: #004040;\n  box-shadow: 0 2px #7f7f7f;\n  transform: translateY(1px); }\n\n.tool-bar {\n  display: flex;\n  align-items: center;\n  margin-bottom: 5px; }\n", "",{"version":3,"sources":["MainPanel.css"],"names":[],"mappings":"AAAA;EACE,oBAAoB;EACpB,kBAAkB;EAClB,kBAAkB;EAClB,YAAY;EACZ,gBAAgB;EAChB,cAAc;EACd,yBAAyB;EACzB,kBAAkB,EAAE;;AAEtB;EACE,yBAAyB;EACzB,yBAAyB;EACzB,0BAA0B,EAAE;;AAE9B;EACE,aAAa;EACb,mBAAmB;EACnB,kBAAkB,EAAE","file":"MainPanel.css","sourcesContent":[".custom-btn {\n  padding: 0.6em 1.2em;\n  margin-left: 0.2em;\n  border-radius: 3px;\n  border: none;\n  font-weight: 400;\n  color: #ffffff;\n  background-color: #326666;\n  text-align: center; }\n\n.custom-btn:active {\n  background-color: #004040;\n  box-shadow: 0 2px #7f7f7f;\n  transform: translateY(1px); }\n\n.tool-bar {\n  display: flex;\n  align-items: center;\n  margin-bottom: 5px; }\n"]}]);
+exports.push([module.i, ".custom-btn {\n  padding: 0.6em 1.2em;\n  margin-left: 0.2em;\n  border-radius: 3px;\n  border: none;\n  font-weight: 400;\n  color: #ffffff;\n  background-color: #326666;\n  text-align: center; }\n\n.custom-btn:active {\n  background-color: #004040;\n  box-shadow: 0 2px #7f7f7f;\n  transform: translateY(1px); }\n\n.tool-bar {\n  display: flex;\n  align-items: center;\n  margin-bottom: 5px; }\n\n.ol-tooltip {\n  position: relative;\n  background: rgba(0, 0, 0, 0.5);\n  border-radius: 4px;\n  color: white;\n  padding: 4px 8px;\n  opacity: 0.7;\n  white-space: nowrap;\n  font-size: 12px; }\n\n.ol-tooltip-measure {\n  opacity: 1;\n  font-weight: bold; }\n\n.ol-tooltip-measure:before {\n  border-top: 6px solid rgba(0, 0, 0, 0.5);\n  border-right: 6px solid transparent;\n  border-left: 6px solid transparent;\n  content: '';\n  position: absolute;\n  bottom: -6px;\n  margin-left: -7px;\n  left: 50%; }\n", "",{"version":3,"sources":["MainPanel.css"],"names":[],"mappings":"AAAA;EACE,oBAAoB;EACpB,kBAAkB;EAClB,kBAAkB;EAClB,YAAY;EACZ,gBAAgB;EAChB,cAAc;EACd,yBAAyB;EACzB,kBAAkB,EAAE;;AAEtB;EACE,yBAAyB;EACzB,yBAAyB;EACzB,0BAA0B,EAAE;;AAE9B;EACE,aAAa;EACb,mBAAmB;EACnB,kBAAkB,EAAE;;AAEtB;EACE,kBAAkB;EAClB,8BAA8B;EAC9B,kBAAkB;EAClB,YAAY;EACZ,gBAAgB;EAChB,YAAY;EACZ,mBAAmB;EACnB,eAAe,EAAE;;AAEnB;EACE,UAAU;EACV,iBAAiB,EAAE;;AAErB;EACE,wCAAwC;EACxC,mCAAmC;EACnC,kCAAkC;EAClC,WAAW;EACX,kBAAkB;EAClB,YAAY;EACZ,iBAAiB;EACjB,SAAS,EAAE","file":"MainPanel.css","sourcesContent":[".custom-btn {\n  padding: 0.6em 1.2em;\n  margin-left: 0.2em;\n  border-radius: 3px;\n  border: none;\n  font-weight: 400;\n  color: #ffffff;\n  background-color: #326666;\n  text-align: center; }\n\n.custom-btn:active {\n  background-color: #004040;\n  box-shadow: 0 2px #7f7f7f;\n  transform: translateY(1px); }\n\n.tool-bar {\n  display: flex;\n  align-items: center;\n  margin-bottom: 5px; }\n\n.ol-tooltip {\n  position: relative;\n  background: rgba(0, 0, 0, 0.5);\n  border-radius: 4px;\n  color: white;\n  padding: 4px 8px;\n  opacity: 0.7;\n  white-space: nowrap;\n  font-size: 12px; }\n\n.ol-tooltip-measure {\n  opacity: 1;\n  font-weight: bold; }\n\n.ol-tooltip-measure:before {\n  border-top: 6px solid rgba(0, 0, 0, 0.5);\n  border-right: 6px solid transparent;\n  border-left: 6px solid transparent;\n  content: '';\n  position: absolute;\n  bottom: -6px;\n  margin-left: -7px;\n  left: 50%; }\n"]}]);
 // Exports
 module.exports = exports;
 
@@ -61750,6 +61750,14 @@ function (_super) {
         singlePointCount: singlePointCount
       }));
     }
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        measureDraw.abortDrawing();
+        measureTooltipElement && measureTooltipElement.parentNode && measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+        createMeasureTooltip();
+      }
+    });
   };
 
   MainPanel.prototype.componentDidUpdate = function (prevProps, prevState) {

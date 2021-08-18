@@ -182,6 +182,16 @@ export class MainPanel extends PureComponent<Props> {
         singlePointCount,
       });
     }
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        measureDraw.abortDrawing();
+        measureTooltipElement &&
+          measureTooltipElement.parentNode &&
+          measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+        createMeasureTooltip();
+      }
+    });
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
