@@ -444,13 +444,30 @@ export class MainPanel extends PureComponent<Props> {
   };
 
   onSliding = (value: number) => {
+    const routeData = this.perDeviceRoute[this.state.current].map(coordinate => fromLonLat(coordinate));
+    const timeData = this.perDeviceTime[this.state.current];
+    const uncertaintyData = this.perDeviceUncertainty[this.state.current];
+    const floorData = this.perDeviceFloor[this.state.current];
+
+    if (floorData[value] !== floorData[this.state.iterRoute]) {
+      const { other_floor, tile_url, tile_other } = this.props.options;
+      let url = '';
+      if (floorData[value] == other_floor) url = tile_other;
+      else url = tile_url;
+
+      this.map.removeLayer(this.randomTile);
+
+      this.randomTile = new TileLayer({
+        source: new XYZ({
+          url: url,
+        }),
+        zIndex: 1,
+      });
+      this.map.addLayer(this.randomTile);
+    }
+
     this.setState({ iterRoute: value }, () => {
       this.map.removeLayer(this.partialRoute);
-
-      const routeData = this.perDeviceRoute[this.state.current].map(coordinate => fromLonLat(coordinate));
-      const timeData = this.perDeviceTime[this.state.current];
-      const uncertaintyData = this.perDeviceUncertainty[this.state.current];
-      const floorData = this.perDeviceFloor[this.state.current];
 
       const lineFeature = createLineWithLabel(routeData, timeData, value, floorData, this.props.options.other_floor);
       const points: Feature[] = [];
