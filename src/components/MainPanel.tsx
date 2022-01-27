@@ -510,7 +510,7 @@ export class MainPanel extends PureComponent<Props> {
 
   render() {
     const { width, height } = this.props;
-    const { options, current, /* iterRoute, */ routeLength, showTotalRoute } = this.state;
+    const { options, current, iterRoute, routeLength, showTotalRoute } = this.state;
 
     return (
       <div
@@ -565,7 +565,7 @@ export class MainPanel extends PureComponent<Props> {
                 </div>
               )}
             </div>
-            {/* <div>
+            <div>
               {current !== 'None' && this.perDeviceTime[current] && (
                 <span style={{ marginLeft: 10 }}>
                   {`${current} ${iterRoute + 1} / ${routeLength - 1} -- Begin: ${new Date(
@@ -583,7 +583,7 @@ export class MainPanel extends PureComponent<Props> {
                   }`}
                 </span>
               )}
-            </div> */}
+            </div>
           </div>
           <div style={{ width: '100%', padding: 10, marginRight: 10 }}>
             {!showTotalRoute && (
