@@ -142,7 +142,7 @@ export const createLineWithLabel = (
           width: 2,
         }),
         font: '18px Calibri,sans-serif',
-        text: `${timeData[iterRoute + 1] - timeData[iterRoute]}s`,
+        text: `${(timeData[iterRoute + 1] - timeData[iterRoute]).toFixed(2)}s`,
       }),
     }),
     new Style({
